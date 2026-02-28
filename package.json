@@ -59,6 +59,17 @@
     "test": "vscode-test",
     "test:skill": "node scripts/test-skill-converter.mjs"
   },
+  "bin": {
+    "oklch-skill": "bin/install.js"
+  },
+  "files": [
+    "skills",
+    "skill",
+    "bin",
+    "scripts/install-cursor-skill.sh",
+    "README.md",
+    "LICENSE.md"
+  ],
   "devDependencies": {
     "@types/culori": "^2.1.1",
     "@types/mocha": "^10.0.9",
