@@ -1,7 +1,7 @@
 {
-  "name": "oklchanger",
-  "displayName": "oklchanger",
-  "description": "Convert any colors to oklch.",
+  "name": "oklch-skill",
+  "displayName": "oklch-skill",
+  "description": "Cursor skill: convert any color to OKLCH or OKLab. Repo contains the skill (skill/) and legacy VS Code extension source (src/).",
   "icon": "gfx/oklchanger.png",
   "author": "Silvestar Bistrović <me@silvestar.codes> (https://www.silvestar.codes/)",
   "publisher": "starbist",
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com:maliMirkec/oklchanger.git"
   },
-  "version": "0.0.7",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.95.0"
   },

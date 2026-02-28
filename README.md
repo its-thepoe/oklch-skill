@@ -1,28 +1,17 @@
-# OKLCHanger!
+# oklch-skill
 
-![oklchanger](https://raw.githubusercontent.com/maliMirkec/oklchanger/5a2a93f680c0401ad0e3951b924c51a0635dcf4d/gfx/oklchanger.gif)
+A **Cursor skill** that converts any color format to OKLCH or OKLab. Use `/oklch` or `/oklab` in Cursor, or find and convert all colors in a file or the whole repo.
 
-Convert any colors to oklch!
+## What it does
 
-A Visual Studio Code extension that converts various color definitions in selected text to the OKLCH color format. This extension supports named colors, HEX, RGB, RGBA, HSL, HSLA, Lab, and LCH color models.
+- **/oklch** — Convert given color(s) to OKLCH (e.g. `oklch(0.63 0.26 29.23 / 1)`).
+- **/oklab** — Convert given color(s) to OKLab.
+- **Convert all in repo** — Find every color in the workspace and convert (preview first, then replace after you confirm).
+- **Convert all in a file** — Pass a file path to limit the scan.
 
-## Features
+Supports hex, rgb/rgba, hsl/hsla (comma or space-separated), hwb, lab, lch, `color(display-p3 ...)`, `color(srgb ...)`, existing oklch/oklab (normalized), and CSS named colors.
 
-- **Supports Multiple Color Formats**: Converts color definitions from named colors, HEX, RGB, RGBA, HSL, HSLA, Lab, and LCH formats to **OKLCH**.
-- **User Feedback**: Displays error messages for colors that cannot be converted.
-
-## Usage
-
-1. Select the color definitions you want to convert in your code. It can be the whole code block.
-2. Open the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac).
-3. Type `OKLCHanger!` and select the command.
-4. The converted colors will replace the original definitions in your selected text.
-
-## Cursor skill (installable)
-
-This repo includes a **Cursor skill** (Option B: skill + Node script) so you or others can convert any color to OKLCH or OKLab via **/oklch** and **/oklab** in Cursor.
-
-### Install the skill
+## Install the skill
 
 From the repo root:
 
@@ -30,48 +19,41 @@ From the repo root:
 ./scripts/install-cursor-skill.sh
 ```
 
-That copies the `skill/` folder to `~/.cursor/skills/oklch/` and runs `npm install` there. To use a custom skills directory:
+That copies the `skill/` folder to `~/.cursor/skills/oklch/` and runs `npm install` there. Custom skills directory:
 
 ```bash
 CURSOR_SKILLS_DIR=/path/to/skills ./scripts/install-cursor-skill.sh
 ```
 
-**Manual install:** Copy the contents of `skill/` to `~/.cursor/skills/oklch/`, then run `npm install` inside that folder.
+**Manual install:** Copy the contents of `skill/` to `~/.cursor/skills/oklch/`, then run `npm install` in that folder.
 
-### Usage in Cursor
+## Usage in Cursor
 
-- **/oklch** — convert given color(s) to OKLCH (e.g. `oklch(0.63 0.26 29.23 / 1)`).
-- **/oklab** — convert given color(s) to OKLab.
+- **/oklch** `#f00` or **/oklab** `rgb(0,0,255)` — convert one or more colors you type.
+- Ask to “convert all colors in this repo to OKLCH” — you get a preview table, then say “apply” to replace in files.
+- Ask to “convert all colors in `src/styles.css`” — same flow for a single file.
 
-Supports hex, rgb(), hsl(), named colors, lab(), lch(), hwb(). Requires Node and a one-time `npm install` in the skill directory.
+Requires Node and a one-time `npm install` in the skill directory.
 
----
+## Repo layout
 
-## Regex Explanation
-
-The extension uses a regex pattern to match the following color formats:
-
-- Named colors (e.g., red, green, blue)
-- HEX colors (e.g., #ff0000, #f00, #f00ff0ff)
-- RGB/RGBA (e.g., rgb(255, 0, 0), rgba(255, 0, 0, 0.5))
-- HSL/HSLA (e.g., hsl(0, 100%, 50%), hsla(0, 100%, 50%, 0.5))
-- Lab and LCH colors (e.g., lab(53.2329, 80.1093, 67.2201), lch(53.23, 107.24, 0deg))
-- HWB colors (e.g., hwb(0, 0%, 0%))
-- CSS variable syntax (e.g., --color-named: red;)
+| Path | Purpose |
+|------|--------|
+| `skill/` | Cursor skill: `SKILL.md`, `scripts/convert.mjs`, `scripts/find-colors.mjs`, `package.json` |
+| `scripts/install-cursor-skill.sh` | Install script (copy skill + npm install) |
+| `scripts/test-skill-converter.mjs` | Smoke test for the installed skill (`npm run test:skill`) |
+| `src/` | Legacy VS Code extension source (oklchanger); kept for reference, not the main product |
 
 ## Development
 
-To contribute to this project or modify it:
-
-1. Make your changes to the code.
-2. Test your changes by launching the extension in the Extension Development Host.
+- Edit the skill in `skill/` (SKILL.md and scripts).
+- Re-run `./scripts/install-cursor-skill.sh` to update your installed skill.
+- Run `npm run test:skill` to verify the converter against the installed skill.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://raw.githubusercontent.com/maliMirkec/oklchanger/refs/heads/master/LICENSE.md) file for details.
+MIT. See [LICENSE.md](LICENSE.md).
 
-## Acknowledgments
+## Credits
 
-This extension uses the `colorjs.io` library for color conversions. For more information, visit the [colorjs.io](https://colorjs.io) website.
-
-> Built with assistance of ChatGPT. ¯\(ツ)/¯
+Color parsing and conversion use [culori](https://github.com/nickel-org/culori). The skill and scripts were derived from the original OKLCHanger VS Code extension logic.

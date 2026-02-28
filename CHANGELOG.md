@@ -1,14 +1,21 @@
-# Change Log
+# Changelog
 
-All notable changes to the "oklchanger" extension will be documented in this file.
+All notable changes to **oklch-skill** (this repo) are documented here.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.0.7] - 2025-11-25
+## [1.0.0] - 2025-03-01
 
-### Fixed
-- Fixed bug where color names in CSS selectors (like `.b-color-blue`) were incorrectly converted. Now only converts colors in CSS property values.
+### Added
 
-## [0.0.6] - 2024
+- Repo repurposed as **oklch-skill**: a Cursor skill (no longer the OKLCHanger VS Code extension as the main product).
+- Cursor skill with triggers **/oklch** and **/oklab** for converting colors to OKLCH or OKLab.
+- Scripts: `skill/scripts/convert.mjs` (culori-based converter), `skill/scripts/find-colors.mjs` (scan repo/files for color strings).
+- Find-and-convert workflow: preview table, then replace in files after user confirms; supports whole repo or single file.
+- Output includes `path`, `line`, `column` for last-to-first replacement order when multiple colors appear on one line.
+- Support for modern CSS: `color(display-p3 ...)`, `color(srgb ...)`, space-separated rgb/hsl; existing `oklch()`/`oklab()` normalized.
+- Install script `scripts/install-cursor-skill.sh` and smoke test `npm run test:skill`.
 
-- Initial release
+### Note
+
+- The VS Code extension source remains in `src/` for reference; the extension is no longer the primary deliverable of this repo.
