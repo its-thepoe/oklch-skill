@@ -3,9 +3,9 @@
  * Convert color(s) to OKLCH or OKLab.
  * Usage:
  *   node convert.mjs <oklch|oklab> <color1> [color2 ...]
- *   node convert.mjs <oklch|oklab>   (read stdin: one color per line, or path\tline\tcolor for batch)
+ *   node convert.mjs <oklch|oklab>   (read stdin: one color per line, or path\tline\tcolumn\tcolor for batch)
  * Example: node convert.mjs oklch "#f00" "rgb(0,0,255)"
- * Pipeline: node find-colors.mjs . | node convert.mjs oklch  (outputs path\tline\tconverted)
+ * Pipeline: node find-colors.mjs . | node convert.mjs oklch  (outputs path\tline\tcolumn\tconverted)
  */
 
 import { createInterface } from "node:readline";
@@ -84,21 +84,26 @@ async function runFromStdin() {
   for await (const line of rl) {
     const trimmed = line.trim();
     if (!trimmed) continue;
-    const tabIdx = trimmed.indexOf("\t");
-    const hasLocation = tabIdx !== -1 && trimmed.indexOf("\t", tabIdx + 1) !== -1;
-    let path, lineNum, colorStr;
-    if (hasLocation) {
-      const secondTab = trimmed.indexOf("\t", tabIdx + 1);
-      path = trimmed.slice(0, tabIdx);
-      lineNum = trimmed.slice(tabIdx + 1, secondTab);
-      colorStr = trimmed.slice(secondTab + 1);
+    const parts = trimmed.split("\t");
+    let path, lineNum, column, colorStr;
+    if (parts.length >= 4) {
+      path = parts[0];
+      lineNum = parts[1];
+      column = parts[2];
+      colorStr = parts.slice(3).join("\t");
+    } else if (parts.length === 3) {
+      path = parts[0];
+      lineNum = parts[1];
+      colorStr = parts[2];
     } else {
       colorStr = trimmed;
     }
     try {
       const rgba = parseColor(colorStr);
       const result = convert(rgba);
-      if (hasLocation) {
+      if (parts.length >= 4) {
+        console.log(`${path}\t${lineNum}\t${column}\t${result}`);
+      } else if (parts.length === 3) {
         console.log(`${path}\t${lineNum}\t${result}`);
       } else {
         console.log(result);

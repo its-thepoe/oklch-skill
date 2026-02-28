@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Find all color-like strings in files. Output: path\tlineNumber\tcolor (one per line).
+ * Find all color-like strings in files. Output: path\tlineNumber\tcolumn\tcolor (one per line).
+ * Column is the 0-based character offset in the line (for last-to-first replacement order).
  * Usage: node find-colors.mjs [path1 path2 ...]  (default: .)
- * Piped to convert.mjs for batch convert; convert.mjs outputs path\tline\tconverted for in-place replace.
+ * Piped to convert.mjs for batch convert; convert.mjs outputs path\tline\tcolumn\tconverted.
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -16,9 +17,12 @@ const HSL = "hsla?\\s*\\([^)]+\\)";
 const HWB = "hwb\\s*\\([^)]+\\)";
 const LAB = "\\blab\\s*\\([^)]+\\)";
 const LCH = "\\blch\\s*\\([^)]+\\)";
+const COLOR_FN = "color\\s*\\(\\s*[\\w-]+\\s+[^)]+\\)";
+const OKLCH = "\\boklch\\s*\\(\\s*[\\d.-][^)]*\\)";
+const OKLAB = "\\boklab\\s*\\(\\s*[\\d.-][^)]*\\)";
 
 const COLOR_REGEX = new RegExp(
-  `\\b(${NAMED})\\b|(${HEX})|(${RGB})|(${HSL})|(${HWB})|(${LAB})|(${LCH})`,
+  `\\b(${NAMED})\\b|(${HEX})|(${RGB})|(${HSL})|(${HWB})|(${LAB})|(${LCH})|(${COLOR_FN})|(${OKLCH})|(${OKLAB})`,
   "gi"
 );
 
@@ -60,7 +64,7 @@ function findColorsInFile(absPath, root) {
     COLOR_REGEX.lastIndex = 0;
     while ((m = COLOR_REGEX.exec(line)) !== null) {
       const color = m[0];
-      out.push({ path, lineNum: i + 1, color });
+      out.push({ path, lineNum: i + 1, column: m.index, color });
     }
   }
   return out;
@@ -82,7 +86,7 @@ const files = paths.length
   : [...walk(root)];
 
 for (const absPath of files) {
-  for (const { path, lineNum, color } of findColorsInFile(absPath, root)) {
-    console.log(`${path}\t${lineNum}\t${color}`);
+  for (const { path, lineNum, column, color } of findColorsInFile(absPath, root)) {
+    console.log(`${path}\t${lineNum}\t${column}\t${color}`);
   }
 }
