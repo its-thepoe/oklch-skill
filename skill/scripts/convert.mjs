@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 /**
  * Convert color(s) to OKLCH or OKLab.
- * Usage: node convert.mjs <oklch|oklab> <color1> [color2 ...]
+ * Usage:
+ *   node convert.mjs <oklch|oklab> <color1> [color2 ...]
+ *   node convert.mjs <oklch|oklab>   (read stdin: one color per line, or path\tline\tcolor for batch)
  * Example: node convert.mjs oklch "#f00" "rgb(0,0,255)"
+ * Pipeline: node find-colors.mjs . | node convert.mjs oklch  (outputs path\tline\tconverted)
  */
 
+import { createInterface } from "node:readline";
 import * as culori from "culori";
 
 function formatValue(value) {
@@ -68,28 +72,56 @@ const format = process.argv[2]?.toLowerCase();
 const colorStrings = process.argv.slice(3);
 
 if (format !== "oklch" && format !== "oklab") {
-  console.error("Usage: node convert.mjs <oklch|oklab> <color1> [color2 ...]");
-  process.exit(1);
-}
-
-if (colorStrings.length === 0) {
-  console.error("At least one color is required.");
+  console.error("Usage: node convert.mjs <oklch|oklab> [color1 color2 ...]");
   process.exit(1);
 }
 
 const convert = format === "oklch" ? toOKLCH : toOKLab;
 const errors = [];
 
-for (const colorStr of colorStrings) {
-  try {
-    const rgba = parseColor(colorStr);
-    console.log(convert(rgba));
-  } catch (err) {
-    errors.push(colorStr);
-    console.error(`Error: ${err.message}`);
+async function runFromStdin() {
+  const rl = createInterface({ input: process.stdin });
+  for await (const line of rl) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    const tabIdx = trimmed.indexOf("\t");
+    const hasLocation = tabIdx !== -1 && trimmed.indexOf("\t", tabIdx + 1) !== -1;
+    let path, lineNum, colorStr;
+    if (hasLocation) {
+      const secondTab = trimmed.indexOf("\t", tabIdx + 1);
+      path = trimmed.slice(0, tabIdx);
+      lineNum = trimmed.slice(tabIdx + 1, secondTab);
+      colorStr = trimmed.slice(secondTab + 1);
+    } else {
+      colorStr = trimmed;
+    }
+    try {
+      const rgba = parseColor(colorStr);
+      const result = convert(rgba);
+      if (hasLocation) {
+        console.log(`${path}\t${lineNum}\t${result}`);
+      } else {
+        console.log(result);
+      }
+    } catch (err) {
+      errors.push(colorStr);
+      console.error(`Error: ${err.message}`);
+    }
   }
+  if (errors.length > 0) process.exit(1);
 }
 
-if (errors.length > 0) {
-  process.exit(1);
+if (colorStrings.length > 0) {
+  for (const colorStr of colorStrings) {
+    try {
+      const rgba = parseColor(colorStr);
+      console.log(convert(rgba));
+    } catch (err) {
+      errors.push(colorStr);
+      console.error(`Error: ${err.message}`);
+    }
+  }
+  if (errors.length > 0) process.exit(1);
+} else {
+  runFromStdin();
 }
