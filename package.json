@@ -56,7 +56,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "test:skill": "node scripts/test-skill-converter.mjs"
   },
   "devDependencies": {
     "@types/culori": "^2.1.1",

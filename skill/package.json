@@ -1,0 +1,10 @@
+{
+  "name": "oklch-skill",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Convert any color format to OKLCH or OKLab (Cursor skill)",
+  "dependencies": {
+    "culori": "^4.0.1"
+  }
+}

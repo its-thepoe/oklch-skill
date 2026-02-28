@@ -18,6 +18,35 @@ A Visual Studio Code extension that converts various color definitions in select
 3. Type `OKLCHanger!` and select the command.
 4. The converted colors will replace the original definitions in your selected text.
 
+## Cursor skill (installable)
+
+This repo includes a **Cursor skill** (Option B: skill + Node script) so you or others can convert any color to OKLCH or OKLab via **/oklch** and **/oklab** in Cursor.
+
+### Install the skill
+
+From the repo root:
+
+```bash
+./scripts/install-cursor-skill.sh
+```
+
+That copies the `skill/` folder to `~/.cursor/skills/oklch/` and runs `npm install` there. To use a custom skills directory:
+
+```bash
+CURSOR_SKILLS_DIR=/path/to/skills ./scripts/install-cursor-skill.sh
+```
+
+**Manual install:** Copy the contents of `skill/` to `~/.cursor/skills/oklch/`, then run `npm install` inside that folder.
+
+### Usage in Cursor
+
+- **/oklch** — convert given color(s) to OKLCH (e.g. `oklch(0.63 0.26 29.23 / 1)`).
+- **/oklab** — convert given color(s) to OKLab.
+
+Supports hex, rgb(), hsl(), named colors, lab(), lch(), hwb(). Requires Node and a one-time `npm install` in the skill directory.
+
+---
+
 ## Regex Explanation
 
 The extension uses a regex pattern to match the following color formats:
