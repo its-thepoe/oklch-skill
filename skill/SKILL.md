@@ -1,32 +1,32 @@
 ---
 name: oklch
-description: Converts any color format to OKLCH or OKLab. Use when the user types /oklch or /oklab, or wants to find and convert all colors in a file, a specific file, or the whole repo.
+description: Converts any color format to OKLCH or OKLab. One command: /oklch. Say "OKLab" or "gradients" (e.g. "convert all gradients to oklab") to get OKLab output; otherwise OKLCH. Scans whole repo when no color is given.
 ---
 
 # Color to OKLCH / OKLab
 
-## Triggers
+## Trigger
 
-- **/oklch** — Convert the given color(s) to OKLCH. If **no color is provided**, scan the **whole repository** for colors, convert all to OKLCH, and present the results as a **conversion table** (file, line, original → converted). Do not replace in files until the user says "apply".
-- **/oklab** — Same as /oklch but convert to OKLab. If no color is provided, scan the whole repo and show the conversion table.
+- **/oklch** — Single command. User can ask for **OKLab** (e.g. "convert all gradients to oklab", "oklch oklab (gradient)", "use OKLab") or **OKLCH** (default). If **no color is provided**, scan the **whole repository**, convert all colors to the chosen format, and show a **conversion table** (file | line | original → converted). Do not replace in files until the user says "apply".
 
-## When the user says /oklch
+## Choosing OKLCH vs OKLab
 
-1. **If they provided color(s):** Run the converter and output the result(s):
+- Use **OKLab** when the user says: OKLab, oklab, gradient(s), "convert all gradients to oklab", "oklch oklab (gradient)", or similar. OKLab is preferred for gradients (perceptually uniform blending).
+- Use **OKLCH** otherwise (default).
+
+## When the user uses /oklch
+
+1. **Choose format** from their message (see above): `oklab` or `oklch`.
+2. **If they provided color(s):** Run the converter in the chosen format:
    ```bash
-   cd ~/.cursor/skills/oklch && node scripts/convert.mjs oklch "<color1>" ["<color2>" ...]
+   node ~/.cursor/skills/oklch/scripts/convert.mjs <oklch|oklab> "<color1>" ["<color2>" ...]
    ```
-   Output each result as `oklch(L C H / A)`.
-2. **If they provided no color:** Treat as "convert all colors in the repo". From the **workspace root**, run the conversion-table script. It scans the whole repository and prints a markdown table (file | line | original → OKLCH). Do not replace in files until they say "apply".
+   Output as `oklch(L C H / A)` or `oklab(L a b / A)`.
+3. **If they provided no color (or asked for "all" / "gradients" / repo scan):** From the **workspace root**, run the conversion-table script in the chosen format:
    ```bash
-   cd <workspace-root> && node ~/.cursor/skills/oklch/scripts/build-conversion-table.mjs oklch
+   cd <workspace-root> && node ~/.cursor/skills/oklch/scripts/build-conversion-table.mjs <oklch|oklab>
    ```
-   Use the script output as the conversion table. Optional: pass paths to limit scope, e.g. `node .../build-conversion-table.mjs oklch src`.
-
-## When the user says /oklab
-
-1. **If they provided color(s):** Run `node ~/.cursor/skills/oklch/scripts/convert.mjs oklab "<color1>" ...` and output each as `oklab(L a b / A)`.
-2. **If they provided no color:** Same as /oklch with no color: run from workspace root: `node ~/.cursor/skills/oklch/scripts/build-conversion-table.mjs oklab`. Use the printed table (file | line | original → OKLab). Do not replace until they say "apply".
+   Use the script output as the conversion table. Optional: pass paths to limit scope, e.g. `... build-conversion-table.mjs oklab src`.
 
 ## When the user wants all colors in a file or repo converted
 
