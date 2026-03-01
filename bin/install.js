@@ -32,7 +32,7 @@ if (existsSync(join(src, "package.json"))) {
 const scriptsDir = join(skillDir, "scripts");
 mkdirSync(scriptsDir, { recursive: true });
 if (existsSync(join(src, "scripts"))) {
-  for (const name of ["convert.mjs", "find-colors.mjs"]) {
+  for (const name of ["convert.mjs", "find-colors.mjs", "build-conversion-table.mjs"]) {
     const f = join(src, "scripts", name);
     if (existsSync(f)) cpSync(f, join(scriptsDir, name), { force: true });
   }
