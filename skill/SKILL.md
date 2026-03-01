@@ -7,30 +7,26 @@ description: Converts any color format to OKLCH or OKLab. Use when the user type
 
 ## Triggers
 
-- **/oklch** — Convert the given color(s) to OKLCH.
-- **/oklab** — Convert the given color(s) to OKLab.
-- **Convert all colors in repo** — Find every color in the workspace and convert to OKLCH or OKLab.
-- **Convert all colors in this file** — Find every color in the current/specified file and convert (pass the file path to find-colors).
+- **/oklch** — Convert the given color(s) to OKLCH. If **no color is provided**, scan the **whole repository** for colors, convert all to OKLCH, and present the results as a **conversion table** (file, line, original → converted). Do not replace in files until the user says "apply".
+- **/oklab** — Same as /oklch but convert to OKLab. If no color is provided, scan the whole repo and show the conversion table.
 
 ## When the user says /oklch
 
-1. Identify the color(s) they provided (hex, rgb(), hsl(), named, lab(), lch(), hwb(), etc.).
-2. Run the converter script from this skill directory:
+1. **If they provided color(s):** Run the converter and output the result(s):
    ```bash
-   cd ~/.cursor/skills/oklch && npm install && node scripts/convert.mjs oklch "<color1>" ["<color2>" ...]
+   cd ~/.cursor/skills/oklch && node scripts/convert.mjs oklch "<color1>" ["<color2>" ...]
    ```
-   Pass each color as a separate argument, quoted if it contains spaces or special characters.
-3. Output the result(s) in the form `oklch(L C H / A)` (one per line if multiple). Include the alpha value (e.g. `/ 1` for opaque).
+   Output each result as `oklch(L C H / A)`.
+2. **If they provided no color:** Treat as "convert all colors in the repo". Run the pipeline from the **workspace root**, then present a **conversion table** (file | line | original → converted). Do not replace in files until they say "apply".
+   ```bash
+   cd <workspace-root> && node ~/.cursor/skills/oklch/scripts/find-colors.mjs . | node ~/.cursor/skills/oklch/scripts/convert.mjs oklch
+   ```
+   Build a markdown table with columns: **File** | **Line** | **Original** | **OKLCH**. For each line of output (path\tline\tcolumn\tconverted), you have the converted value; the original color is what find-colors matched at that path/line/column (you can run find-colors separately to get path\tline\tcolumn\toriginal and align with the convert output by line order to show original → converted).
 
 ## When the user says /oklab
 
-1. Identify the color(s) they provided.
-2. Run:
-   ```bash
-   cd ~/.cursor/skills/oklch && node scripts/convert.mjs oklab "<color1>" ["<color2>" ...]
-   ```
-   (Run `npm install` once in that directory if not already done.)
-3. Output the result(s) as `oklab(L a b / A)`.
+1. **If they provided color(s):** Run `node ~/.cursor/skills/oklch/scripts/convert.mjs oklab "<color1>" ...` and output each as `oklab(L a b / A)`.
+2. **If they provided no color:** Same as /oklch with no color: scan the whole repo, convert all to OKLab, present the conversion table (file | line | original → converted). Do not replace until they say "apply".
 
 ## When the user wants all colors in a file or repo converted
 
