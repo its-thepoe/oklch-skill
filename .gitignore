@@ -4,5 +4,3 @@ dist
 node_modules
 skill/node_modules
 skills/oklch/node_modules
-.vscode-test/
-*.vsix

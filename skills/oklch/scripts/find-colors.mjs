@@ -67,6 +67,10 @@ function findColorsInFile(absPath, root) {
     COLOR_REGEX.lastIndex = 0;
     while ((m = COLOR_REGEX.exec(line)) !== null) {
       const color = m[0];
+      // Skip placeholder docs like oklch(...) or oklab(...) that have no digits inside
+      if (/^oklch\s*\(/i.test(color) || /^oklab\s*\(/i.test(color)) {
+        if (!/\d/.test(color)) continue;
+      }
       out.push({ path, lineNum: i + 1, column: m.index, color });
     }
   }

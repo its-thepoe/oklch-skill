@@ -48,6 +48,17 @@ description: Converts any color format to OKLCH or OKLab. One command: /oklch. S
    cd <workspace-root> && node ~/.cursor/skills/oklch/scripts/find-colors.mjs [path1 ...] | node ~/.cursor/skills/oklch/scripts/convert.mjs <oklch|oklab>
    ```
 
+## Context and documentation
+
+- **Documentation files (by path/name):** Treat a file as documentation if its **basename** matches or it lives under:
+  - **Names:** README, README.*, CHANGELOG, CHANGELOG.*, LICENSE, LICENSE.*, CONTRIBUTING, CONTRIBUTING.*, SKILL.md.
+  - **Directories:** `docs/`, `documentation/`.
+  - **Extensions in those locations:** .md, .mdx, .rst, .adoc, .txt (only when in repo root or under `docs/` or `documentation/`). Do **not** treat .md (or other doc extensions) under code directories (e.g. `src/`, `lib/`, `app/`) as documentation by path alone.
+- **Usage example vs design color in docs:** A **usage example** is a color that appears in text that describes **how to use the skill** (e.g. near "/oklch", "/oklab", "e.g.", "example:", "input:", "try:"). Only usage examples in documentation files get annotated; design or brand colors in the same files are treated as normal conversions.
+- **Full script output:** Always include the **full** conversion table from the script (every row). Do not omit any rows. For rows where (1) the file is a documentation file and (2) the color is a usage example on that line, **annotate** the row (e.g. add a column or note: `documentation example — skip unless user asks to update examples`).
+- **When the user explicitly asks to replace colors in a doc file** (e.g. "replace the ones in the README"): Run the conversion table (or find-colors) for that file, then apply. For a line that documents both /oklch and /oklab, use **proximity**: the color near "/oklch" → convert to oklch(...); the color near "/oklab" → convert to oklab(...). Run the converter twice if needed (once oklch, once oklab).
+- **Apply:** When replacing, skip rows annotated as documentation examples unless the user asked to update those examples. Use oklch() for the color that illustrates /oklch and oklab() for the color that illustrates /oklab on the same line.
+
 ## Supported input formats
 
 Hex (#rgb, #rrggbb, #rrggbbaa), rgb()/rgba(), hsl()/hsla() (comma or space-separated), hwb(), lab(), lch(), color(display-p3 ...), color(srgb ...), oklch(), oklab(), and CSS named colors. The script uses culori for parsing and conversion. Existing oklch() and oklab() values are **normalized** (reformatted to 2 decimals, standard alpha) when found.
