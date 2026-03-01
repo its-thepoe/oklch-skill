@@ -42,7 +42,7 @@ git clone https://github.com/OWNER/oklch-skill.git /tmp/oklch-skill && /tmp/oklc
 ./scripts/install-cursor-skill.sh
 ```
 
-**Manual:** Copy the contents of `skills/oklch/` (or `skill/`) to `~/.cursor/skills/oklch/`, then run `npm install` in that folder.
+**Manual:** Copy the contents of `skills/oklch/` to `~/.cursor/skills/oklch/`, then run `npm install` in that folder.
 
 ## Usage in Cursor
 
@@ -56,8 +56,7 @@ Requires Node and a one-time `npm install` in the skill directory.
 
 | Path | Purpose |
 |------|--------|
-| `skills/oklch/` | Cursor skill (used by `npx skills add` and install script): `SKILL.md`, `scripts/`, `package.json` |
-| `skill/` | Same skill, legacy path (install script uses `skills/oklch/` when present) |
+| `skills/oklch/` | Cursor skill: `SKILL.md`, `scripts/`, `package.json` (used by `npx skills add` and install scripts) |
 | `bin/install.js` | Installer run by `npx oklch-skill` |
 | `scripts/install-cursor-skill.sh` | Install script (copy skill + npm install) |
 | `scripts/test-skill-converter.mjs` | Smoke test for the installed skill (`npm run test:skill`) |
@@ -65,7 +64,7 @@ Requires Node and a one-time `npm install` in the skill directory.
 
 ## Development
 
-- Edit the skill in `skills/oklch/` (or `skill/`). Re-run `./scripts/install-cursor-skill.sh` to update your installed skill.
+- Edit the skill in `skills/oklch/`. Re-run `./scripts/install-cursor-skill.sh` to update your installed skill.
 - Run `npm run test:skill` to verify the converter against the installed skill.
 
 ## License
