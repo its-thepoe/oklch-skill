@@ -12,12 +12,15 @@ import { join, relative } from "node:path";
 const NAMED =
   "(?:aliceblue|antiquewhite|aqua|aquamarine|azure|beige|bisque|blanchedalmond|blue|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dodgerblue|firebrick|floralwhite|forestgreen|fuchsia|gainsboro|ghostwhite|gold|goldenrod|gray|green|greenyellow|honeydew|hotpink|indianred|indigo|ivory|khaki|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightsteelblue|lightyellow|lime|limegreen|linen|magenta|maroon|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|navy|oldlace|olive|olivedrab|orange|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|purple|red|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|silver|skyblue|slateblue|slategray|snow|springgreen|steelblue|tan|teal|thistle|tomato|turquoise|violet|wheat|white|whitesmoke|yellow|yellowgreen)";
 const HEX = "#(?:[0-9a-fA-F]{3}){1,2}|#(?:[0-9a-fA-F]{8})";
-const RGB = "rgba?\\s*\\([^)]+\\)";
-const HSL = "hsla?\\s*\\([^)]+\\)";
-const HWB = "hwb\\s*\\([^)]+\\)";
-const LAB = "\\blab\\s*\\([^)]+\\)";
-const LCH = "\\blch\\s*\\([^)]+\\)";
-const COLOR_FN = "color\\s*\\(\\s*[\\w-]+\\s+[^)]+\\)";
+// Require at least one digit inside parens; reject code/docs: no { ' " or long word runs (e.g. "comma or space-separated")
+const NUMERIC_PAREN = "(?=[^)]*\\d)[^)'\"{}]+";
+const RGB = "rgba?\\s*\\(" + NUMERIC_PAREN + "\\)";
+const HSL = "hsla?\\s*\\(" + NUMERIC_PAREN + "\\)";
+const HWB = "hwb\\s*\\(" + NUMERIC_PAREN + "\\)";
+const LAB = "\\blab\\s*\\(" + NUMERIC_PAREN + "\\)";
+const LCH = "\\blch\\s*\\(" + NUMERIC_PAREN + "\\)";
+// color(space id): require at least one digit after the space id so we don't match "color(display-p3 ...)" or "color(srgb ...)"
+const COLOR_FN = "color\\s*\\(\\s*[\\w.-]+\\s+" + NUMERIC_PAREN + "\\)";
 const OKLCH = "\\boklch\\s*\\(\\s*[\\d.-][^)]*\\)";
 const OKLAB = "\\boklab\\s*\\(\\s*[\\d.-][^)]*\\)";
 
