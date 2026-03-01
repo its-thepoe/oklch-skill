@@ -35,16 +35,17 @@ for (const raw of lines) {
   rows.push({ file, line: lineNum, original, converted });
 }
 
-const max = 80;
-const show = rows.length <= max ? rows : rows.slice(0, max);
+// Skip rows already in target format (oklch → oklch or oklab → oklab); table shows only colors that need converting
+const alreadyTarget = format === "oklch" ? /^\s*oklch\s*\(/i : /^\s*oklab\s*\(/i;
+const rowsToShow = rows.filter((r) => !alreadyTarget.test(r.original.trim()));
+
 console.log("| File | Line | Original | " + (format === "oklch" ? "OKLCH" : "OKLab") + " |");
 console.log("|------|------|----------|-------|");
-for (const r of show) {
+for (const r of rowsToShow) {
   const orig = r.original.replace(/\|/g, "\\|").replace(/\n/g, " ");
   console.log(`| ${r.file} | ${r.line} | \`${orig}\` | ${r.converted} |`);
 }
-if (rows.length > max) {
-  console.log(`| … | … | … | *( ${rows.length} total, showing first ${max} )* |`);
-}
 console.log("");
-console.log("**Total:** " + rows.length + " color(s) found. Say **apply** to replace in files (rightmost first per line).");
+const skipped = rows.length - rowsToShow.length;
+const totalNote = skipped > 0 ? `${rowsToShow.length} to convert (${skipped} already ${format})` : rowsToShow.length;
+console.log("**Total:** " + totalNote + " color(s). Say **apply** to replace in files (rightmost first per line).");

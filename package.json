@@ -1,62 +1,13 @@
 {
   "name": "oklch-skill",
-  "displayName": "oklch-skill",
-  "description": "Cursor skill: convert any color to OKLCH or OKLab. Repo contains the skill in skills/oklch/ and legacy VS Code extension source (src/).",
-  "icon": "gfx/oklchanger.png",
-  "author": "Silvestar Bistrović <me@silvestar.codes> (https://www.silvestar.codes/)",
-  "publisher": "starbist",
+  "description": "Cursor skill: convert any color to OKLCH or OKLab. Use /oklch or /oklab in Cursor.",
+  "version": "1.0.0",
+  "author": "Oladipupo Ayoola <hi@thepoe.xyz> (https://thepoe.xyz)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:maliMirkec/oklchanger.git"
-  },
-  "version": "1.0.0",
-  "engines": {
-    "vscode": "^1.95.0"
-  },
-  "activationEvents": [],
-  "main": "./dist/extension.js",
-  "contributes": {
-    "tags": [
-      "Color Conversion",
-      "OKLCH",
-      "CSS",
-      "Visual Studio Code",
-      "Design Tools",
-      "Color Theory"
-    ],
-    "categories": [
-      "Development",
-      "Utilities",
-      "Design",
-      "Styling"
-    ],
-    "commands": [
-      {
-        "command": "extension.convertColorsToOKLCH",
-        "title": "OKLCHanger!"
-      }
-    ],
-    "configuration": {
-      "title": "OKLCHanger! Settings",
-      "properties": {
-        "oklchConverter.useOpacity": {
-          "type": "boolean",
-          "default": true,
-          "description": "Include opacity in OKLCH color output"
-        }
-      }
-    }
+    "url": "git+https://github.com/its-thepoe/oklch-skill.git"
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test",
     "test:skill": "node scripts/test-skill-converter.mjs"
   },
   "bin": {
@@ -69,22 +20,6 @@
     "README.md",
     "LICENSE.md"
   ],
-  "devDependencies": {
-    "@types/culori": "^2.1.1",
-    "@types/mocha": "^10.0.9",
-    "@types/node": "20.x",
-    "@types/vscode": "^1.95.0",
-    "@typescript-eslint/eslint-plugin": "^8.10.0",
-    "@typescript-eslint/parser": "^8.7.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1",
-    "culori": "^4.0.1",
-    "eslint": "^9.13.0",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.6.3",
-    "webpack": "^5.95.0",
-    "webpack-cli": "^5.1.4"
-  },
   "license": "MIT",
   "licenseFile": "LICENSE.md"
 }

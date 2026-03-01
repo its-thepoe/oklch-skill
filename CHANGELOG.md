@@ -16,6 +16,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Support for modern CSS: `color(display-p3 ...)`, `color(srgb ...)`, space-separated rgb/hsl; existing `oklch()`/`oklab()` normalized.
 - Install script `scripts/install-cursor-skill.sh` and smoke test `npm run test:skill`.
 
-### Note
-
-- The VS Code extension source remains in `src/` for reference; the extension is no longer the primary deliverable of this repo.

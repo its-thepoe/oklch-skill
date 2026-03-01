@@ -27,10 +27,17 @@ description: Converts any color format to OKLCH or OKLab. One command: /oklch. S
    cd <workspace-root> && node ~/.cursor/skills/oklch/scripts/build-conversion-table.mjs <oklch|oklab>
    ```
    Use the script output as the conversion table. Optional: pass paths to limit scope, e.g. `... build-conversion-table.mjs oklab src`.
+   **Always include the full script output in your response**—paste the entire table (every row). Do not summarize, truncate, or use an ellipsis row; the user should see the complete list.
+
+## Response format (important)
+
+- **Conversion table:** When you run `build-conversion-table.mjs`, include the **full** script output in your reply. Paste every row of the table so the user sees the complete list. Do not cap or summarize (e.g. no "first 80" or "…" row).
+- **Single-color conversion:** Output the exact result(s) from the converter script.
+- **Apply:** Only replace in files after the user says "apply" (or "replace", "go ahead").
 
 ## When the user wants all colors in a file or repo converted
 
-1. **Preview first:** Run the conversion-table script from the workspace root and present the printed table. Do **not** replace in files until the user explicitly confirms (e.g. "apply", "replace", "go ahead").
+1. **Preview first:** Run the conversion-table script from the workspace root and present the **full** printed table (every row; do not truncate or summarize). Do **not** replace in files until the user explicitly confirms (e.g. "apply", "replace", "go ahead").
    ```bash
    cd <workspace-root> && node ~/.cursor/skills/oklch/scripts/build-conversion-table.mjs <oklch|oklab> [path1 path2 ...]
    ```
